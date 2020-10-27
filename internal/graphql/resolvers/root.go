@@ -46,32 +46,6 @@ type ApiResolver interface {
 	// to notify them about the change.
 	ValidateContract(*struct{ Contract ContractValidationInput }) (*Contract, error)
 
-	// Ballot resolves details of a voting ballot by it's address.
-	Ballot(*struct{ Address common.Address }) (*Ballot, error)
-
-	// Ballots resolves list of official ballots.
-	Ballots(*struct {
-		Cursor *Cursor
-		Count  int32
-	}) (*BallotList, error)
-
-	// BallotsClosed resolves list of official ballots recently closed.
-	BallotsClosed(*struct {
-		Finalized bool
-		Count     int32
-	}) ([]*Ballot, error)
-
-	// BallotsActive resolves list of currently active ballots.
-	BallotsActive(*struct {
-		Count int32
-	}) ([]*Ballot, error)
-
-	// Votes resolves list of votes for the given voter address and list of ballots.
-	Votes(*struct {
-		Voter   common.Address
-		Ballots []common.Address
-	}) ([]Vote, error)
-
 	// Block resolves blockchain block by number or by hash. If neither is provided, the most recent block is given.
 	Block(*struct {
 		Number *hexutil.Uint64
@@ -111,110 +85,8 @@ type ApiResolver interface {
 	// StakersNum resolves the number of stakers in Opera blockchain.
 	StakersNum() (hexutil.Uint64, error)
 
-	// Staker resolves a staker information from SFC smart contract.
-	Staker(*struct {
-		Id      *hexutil.Uint64
-		Address *common.Address
-	}) (*Staker, error)
-
-	// Stakers resolves a list of staker information from SFC smart contract.
-	Stakers() ([]Staker, error)
-
-	// Delegation resolves details of a delegator by it's address.
-	Delegation(*struct {
-		Address common.Address
-		Staker  hexutil.Uint64
-	}) (*Delegation, error)
-
-	// Resolves a list of delegations information of a staker.
-	DelegationsOf(*struct {
-		Staker hexutil.Uint64
-		Cursor *Cursor
-		Count  int32
-	}) (*DelegationList, error)
-
-	// Resolves a list of own delegations by the account address.
-	DelegationsByAddress(*struct {
-		Address common.Address
-		Cursor  *Cursor
-		Count   int32
-	}) (*DelegationList, error)
-
-	// Price resolves price details of the Opera blockchain token for the given target symbols.
-	Price(*struct{ To string }) (types.Price, error)
-
-	// GasPrice resolves the current amount of WEI for single Gas.
-	GasPrice() (hexutil.Uint64, error)
-
-	// EstimateRewards resolves reward estimation for the given address or amount staked.
-	EstimateRewards(*struct {
-		Address *common.Address
-		Amount  *hexutil.Uint64
-	}) (EstimatedRewards, error)
-
 	// SendTransaction sends raw signed and RLP encoded transaction to the block chain.
 	SendTransaction(*struct{ Tx hexutil.Bytes }) (*Transaction, error)
-
-	// DefiConfiguration resolves the current DeFi contract settings.
-	DefiConfiguration() (*DefiConfiguration, error)
-
-	// DefiTokens resolves list of DeFi tokens available for the DeFi functions.
-	DefiTokens() ([]*DefiToken, error)
-
-	// DefiUniswapPairs resolves a list of all pairs managed by the Uniswap core.
-	DefiUniswapPairs() []*UniswapPair
-
-	// DefiUniswapAmountsOut resolves a list of output amounts for the given
-	// input amount and a list of tokens to be used to make the swap operation.
-	DefiUniswapAmountsOut(*struct {
-		AmountIn hexutil.Big
-		Tokens   []common.Address
-	}) ([]hexutil.Big, error)
-
-	// DefiUniswapAmountsOut resolves a list of input amounts for the given
-	// output amount and a list of tokens to be used to make the swap operation.
-	DefiUniswapAmountsIn(*struct {
-		AmountOut hexutil.Big
-		Tokens    []common.Address
-	}) ([]hexutil.Big, error)
-
-	// DefiUniswapQuoteLiquidity resolves a list of optimal amounts of tokens
-	// to be added to both sides of a pair on addLiquidity call.
-	DefiUniswapQuoteLiquidity(*struct {
-		Tokens    []common.Address
-		AmountsIn []hexutil.Big
-	}) ([]hexutil.Big, error)
-
-	// FMintAccount resolves details of a specified DeFi account.
-	FMintAccount(*struct{ Owner common.Address }) (*FMintAccount, error)
-
-	// FMintTokenAllowance resolves the amount of ERC20 tokens unlocked
-	// by the token owner for DeFi/fMint protocol operations.
-	FMintTokenAllowance(args *struct {
-		Owner common.Address
-		Token common.Address
-	}) (hexutil.Big, error)
-
-	// Erc20Token resolves an instance of ERC20 token if available.
-	Erc20Token(args *struct{ Token common.Address }) *ERC20Token
-
-	// ErcTokenBalance resolves the current available balance of the specified token
-	// for the specified owner.
-	ErcTokenBalance(args *struct {
-		Owner common.Address
-		Token common.Address
-	}) (hexutil.Big, error)
-
-	// ErcTotalSupply resolves the current total supply of the specified token.
-	ErcTotalSupply(args *struct{ Token common.Address }) (hexutil.Big, error)
-
-	// ErcTokenAllowance resolves the current amount of ERC20 tokens unlocked
-	// by the token owner for the spender to be manipulated with.
-	ErcTokenAllowance(args *struct {
-		Token   common.Address
-		Owner   common.Address
-		Spender common.Address
-	}) (hexutil.Big, error)
 
 	// Close terminates resolver broadcast management.
 	Close()

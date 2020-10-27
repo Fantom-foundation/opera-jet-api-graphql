@@ -19,7 +19,6 @@ import (
 	"github.com/ethereum/go-ethereum/common/compiler"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	ftm "github.com/ethereum/go-ethereum/rpc"
-	"math/big"
 )
 
 // Repository interface defines functions the underlying implementation provides to API resolvers.
@@ -102,78 +101,8 @@ type Repository interface {
 	// StakersNum returns the number of stakers in Opera blockchain.
 	StakersNum() (hexutil.Uint64, error)
 
-	// Staker extract a staker information from SFC smart contract.
-	Staker(hexutil.Uint64) (*types.Staker, error)
-
-	// Staker extract a staker information by address.
-	StakerByAddress(common.Address) (*types.Staker, error)
-
-	// TotalStaked calculates current total staked amount for all stakers.
-	TotalStaked() (*hexutil.Big, error)
-
-	// StakerInfo extracts an extended staker information from smart contact.
-	PullStakerInfo(hexutil.Uint64) (*types.StakerInfo, error)
-
-	// StoreStakerInfo stores staker information to in-memory cache for future use.
-	StoreStakerInfo(hexutil.Uint64, types.StakerInfo) error
-
-	// RetrieveStakerInfo gets staker information from in-memory if available.
-	RetrieveStakerInfo(hexutil.Uint64) *types.StakerInfo
-
-	// Delegation returns a detail of delegation for the given address.
-	Delegation(common.Address, hexutil.Uint64) (*types.Delegation, error)
-
-	// DelegationsByAddress returns a list of all delegations
-	// of a given delegator address.
-	DelegationsByAddress(common.Address) ([]types.Delegation, error)
-
-	// DelegationsOf extracts a list of delegations for a given staker.
-	DelegationsOf(hexutil.Uint64) ([]types.Delegation, error)
-
-	// DelegationLock returns delegation lock information using SFC contract binding.
-	DelegationLock(*types.Delegation) (*types.DelegationLock, error)
-
-	// Delegation returns a detail of delegation for the given address.
-	DelegationRewards(string, hexutil.Uint64) (types.PendingRewards, error)
-
-	// WithdrawRequests extracts a list of partial withdraw requests
-	// for the given address.
-	WithdrawRequests(*common.Address, *hexutil.Uint64) ([]*types.WithdrawRequest, error)
-
-	// DeactivatedDelegation extracts a list of deactivated delegation requests
-	// for the given address.
-	DeactivatedDelegation(*common.Address, *hexutil.Uint64) ([]*types.DeactivatedDelegation, error)
-
 	// SfcVersion returns current version of the SFC contract.
 	SfcVersion() (hexutil.Uint64, error)
-
-	// LockingAllowed indicates if the stake locking has been enabled in SFC.
-	LockingAllowed() (bool, error)
-
-	// RewardsAllowed returns the reward lock status from SFC.
-	RewardsAllowed() (bool, error)
-
-	// RewardsStash returns the amount of WEI stashed for the given address.
-	RewardsStash(*common.Address) (*big.Int, error)
-
-	// delegatedAmount calculates total amount currently delegated
-	// and amount locked in pending un-delegation.
-	// Partial Un-delegations are subtracted during the preparation
-	// phase, but total un-delegations are subtracted only when
-	// the delegation is closed.
-	DelegatedAmountExtended(*types.Delegation) (*big.Int, *big.Int, error)
-
-	// DelegationFluidStakingActive signals if the delegation is upgraded to Fluid Staking model.
-	DelegationFluidStakingActive(*types.Delegation) (bool, error)
-
-	// DelegationPaidUntilEpoch resolves the id of the last epoch rewards has been paid to."
-	DelegationPaidUntilEpoch(*types.Delegation) (hexutil.Uint64, error)
-
-	// Price returns a price information for the given target symbol.
-	Price(sym string) (types.Price, error)
-
-	// GasPrice resolves the current amount of WEI for single Gas.
-	GasPrice() (hexutil.Uint64, error)
 
 	// SendTransaction sends raw signed and RLP encoded transaction to the block chain.
 	SendTransaction(hexutil.Bytes) (*types.Transaction, error)
@@ -194,128 +123,6 @@ type Repository interface {
 	// provided source code. If successful, the contract information
 	// is updated the the repository.
 	ValidateContract(*types.Contract) error
-
-	// Ballots returns list of ballots at Opera blockchain.
-	Ballots(*string, int32) (*types.BallotList, error)
-
-	// BallotsClosed returns a list of <count> recently closed Ballots.
-	// If the finalized is set to false, the list contains Ballots waiting
-	// to be resolved.
-	BallotsClosed(bool, uint32) ([]types.Ballot, error)
-
-	// BallotsActive returns a list of at most <count> currently active Ballots.
-	BallotsActive(uint32) ([]types.Ballot, error)
-
-	// BallotByAddress returns a ballot information by the contract address.
-	BallotByAddress(*common.Address) (*types.Ballot, error)
-
-	// BallotIsFinalized returns the finalized status of a ballot.
-	BallotIsFinalized(*common.Address) (bool, error)
-
-	// BallotWinner returns the winning proposal index, or nil if not decided.
-	BallotWinner(*common.Address) (*uint64, error)
-
-	// Votes returns a list of votes for the given votes and list of ballots.
-	Votes(common.Address, []common.Address) ([]types.Vote, error)
-
-	// DefiConfiguration loads the current DeFi contract settings.
-	DefiConfiguration() (*types.DefiSettings, error)
-
-	// DefiTokens resolves list of DeFi tokens available for the DeFi functions.
-	DefiTokens() ([]types.DefiToken, error)
-
-	// DefiToken loads details of a single DeFi token by it's address.
-	DefiToken(*common.Address) (*types.DefiToken, error)
-
-	// DefiTokenPrice loads the current price of the given token
-	// from on-chain price oracle.
-	DefiTokenPrice(*common.Address) (hexutil.Big, error)
-
-	// FMintAccount loads details of a DeFi/fMint account identified by the owner address.
-	FMintAccount(common.Address) (*types.FMintAccount, error)
-
-	// FMintTokenBalance loads balance of a single DeFi token by it's address.
-	FMintTokenBalance(*common.Address, *common.Address, types.DefiTokenType) (hexutil.Big, error)
-
-	// FMintTokenValue loads value of a single DeFi token by it's address in fUSD.
-	FMintTokenValue(*common.Address, *common.Address, types.DefiTokenType) (hexutil.Big, error)
-
-	// FMintRewardsEarned resolves the total amount of rewards
-	// accumulated on the account for the excessive collateral deposits.
-	FMintRewardsEarned(*common.Address) (hexutil.Big, error)
-
-	// FMintRewardsStashed represents the total amount of rewards
-	// accumulated on the account in stash.
-	FMintRewardsStashed(*common.Address) (hexutil.Big, error)
-
-	// FMintCanClaimRewards resolves the fMint account flag for being allowed
-	// to claim earned rewards.
-	FMintCanClaimRewards(*common.Address) (bool, error)
-
-	// FMintCanReceiveRewards resolves the fMint account flag for being eligible
-	// to receive earned rewards. If the collateral to debt ration drop below
-	// certain value, earned rewards are burned.
-	FMintCanReceiveRewards(*common.Address) (bool, error)
-
-	// FMintCanPushRewards signals if there are any rewards unlocked
-	// on the rewards distribution contract and can be pushed to accounts.
-	FMintCanPushRewards() (bool, error)
-
-	// UniswapPairs returns list of all token pairs managed by Uniswap core.
-	UniswapPairs() ([]common.Address, error)
-
-	// UniswapPair returns an address of an Uniswap pair for the given tokens.
-	UniswapPair(*common.Address, *common.Address) (*common.Address, error)
-
-	// UniswapAmountsOut resolves a list of output amounts for the given
-	// input amount and a list of tokens to be used to make the swap operation.
-	UniswapAmountsOut(amountIn hexutil.Big, tokens []common.Address) ([]hexutil.Big, error)
-
-	// UniswapAmountsIn resolves a list of input amounts for the given
-	// output amount and a list of tokens to be used to make the swap operation.
-	UniswapAmountsIn(amountOut hexutil.Big, tokens []common.Address) ([]hexutil.Big, error)
-
-	// UniswapQuoteInput calculates optimal input on sibling token based on input amount and
-	// self reserves of the analyzed token.
-	UniswapQuoteInput(amountIn hexutil.Big, reserveMy hexutil.Big, reserveSibling hexutil.Big) (hexutil.Big, error)
-
-	// UniswapTokens returns list of addresses of tokens involved in a Uniswap pair.
-	UniswapTokens(*common.Address) ([]common.Address, error)
-
-	// UniswapReserves returns list of token reserve amounts in a Uniswap pair.
-	UniswapReserves(*common.Address) ([]hexutil.Big, error)
-
-	// UniswapReservesTimeStamp returns the timestamp of the reserves of a Uniswap pair.
-	UniswapReservesTimeStamp(*common.Address) (hexutil.Uint64, error)
-
-	// UniswapCumulativePrices returns list of token cumulative prices of a Uniswap pair.
-	UniswapCumulativePrices(*common.Address) ([]hexutil.Big, error)
-
-	// UniswapLastKValue returns the last value of the pool control coefficient.
-	UniswapLastKValue(*common.Address) (hexutil.Big, error)
-
-	// NativeTokenAddress returns address of the native token wrapper, if available.
-	NativeTokenAddress() (*common.Address, error)
-
-	// Erc20BalanceOf load the current available balance of and ERC20 token identified by the token
-	// contract address for an identified owner address.
-	Erc20BalanceOf(*common.Address, *common.Address) (hexutil.Big, error)
-
-	// Erc20Allowance loads the current amount of ERC20 tokens unlocked for DeFi
-	// contract by the token owner.
-	Erc20Allowance(*common.Address, *common.Address, *common.Address) (hexutil.Big, error)
-
-	// Erc20TotalSupply provides information about all available tokens
-	Erc20TotalSupply(*common.Address) (hexutil.Big, error)
-
-	// Erc20Name provides information about the name of the ERC20 token.
-	Erc20Name(*common.Address) (string, error)
-
-	// Erc20Symbol provides information about the symbol of the ERC20 token.
-	Erc20Symbol(*common.Address) (string, error)
-
-	// Erc20Decimals provides information about the decimals of the ERC20 token.
-	Erc20Decimals(*common.Address) (int32, error)
 
 	// Close and cleanup the repository.
 	Close()

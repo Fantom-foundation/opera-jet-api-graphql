@@ -16,7 +16,6 @@ package rpc
 import (
 	"fantom-api-graphql/internal/config"
 	"fantom-api-graphql/internal/logger"
-	"github.com/ethereum/go-ethereum/common"
 	eth "github.com/ethereum/go-ethereum/ethclient"
 	ftm "github.com/ethereum/go-ethereum/rpc"
 )
@@ -26,13 +25,6 @@ type FtmBridge struct {
 	rpc *ftm.Client
 	eth *eth.Client
 	log logger.Logger
-
-	// fMintCfg represents the configuration of the fMint protocol
-	fMintCfg fMintConfig
-
-	// uniswap configuration elements used by the bridge
-	uniswapCore   common.Address
-	uniswapRouter common.Address
 }
 
 // New creates new Lachesis RPC connection bridge.
@@ -62,19 +54,8 @@ func New(cfg *config.Config, log logger.Logger) (*FtmBridge, error) {
 		rpc: client,
 		eth: con,
 		log: log,
-
-		// special configuration options below this line
-		fMintCfg: fMintConfig{
-			addressProvider: common.HexToAddress(cfg.DefiFMintAddressProvider),
-		},
-
-		// uniswap config
-		uniswapCore:   common.HexToAddress(cfg.DefiUniswapCore),
-		uniswapRouter: common.HexToAddress(cfg.DefiUniswapRouter),
 	}
 
-	// add the bridge ref to the fMintCfg and return the instance
-	br.fMintCfg.bridge = br
 	return br, nil
 }
 
