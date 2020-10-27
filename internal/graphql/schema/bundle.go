@@ -436,13 +436,6 @@ type Staker {
 
     "StakerInfo represents extended staker information from smart contract."
     stakerInfo: StakerInfo
-
-    """
-    List of withdraw requests of the stake.
-    Contains only withdrawal requests of the staking account,
-    not the requests of the stake delegators.
-    """
-    withdrawRequests: [WithdrawRequest!]!
 }
 
 
