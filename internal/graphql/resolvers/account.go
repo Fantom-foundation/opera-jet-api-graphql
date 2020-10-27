@@ -15,7 +15,6 @@ const accMaxTransactionsPerRequest = 50
 // Account represents resolvable blockchain account structure.
 type Account struct {
 	repo          repository.Repository
-	rfStaker      *types.Staker
 	rfBalance     *hexutil.Big
 
 	/* extended delegated amounts pre-loaded */
