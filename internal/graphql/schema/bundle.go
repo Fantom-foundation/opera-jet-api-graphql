@@ -556,12 +556,6 @@ type Query {
 
     "List of staker information from SFC smart contract."
     stakers: [Staker!]!
-
-    "Returns the current price per gas in WEI units."
-    gasPrice: Long!
-
-    "Get price details of the Opera blockchain token for the given target symbols."
-    price(to:String!):Price!
 }
 
 # Mutation endpoints for modifying the data

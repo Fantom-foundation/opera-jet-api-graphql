@@ -31,9 +31,6 @@ type Transaction {
     # Value is the value sent along with this transaction in WEI.
     value: BigInt!
 
-    # GasPrice is the price of gas per unit in WEI.
-    gasPrice: BigInt!
-
     # Gas represents gas provided by the sender.
     gas: Long!
 

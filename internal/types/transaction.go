@@ -27,9 +27,6 @@ type Transaction struct {
 	// CumulativeGasUsed represents the total amount of gas used when this transaction was executed in the block.
 	CumulativeGasUsed *hexutil.Uint64 `json:"-"`
 
-	// GasPrice represents gas price provided by the sender in Wei.
-	GasPrice hexutil.Big `json:"gasPrice"`
-
 	// Hash represents 32 bytes hash of the transaction.
 	Hash Hash `json:"hash"`
 
