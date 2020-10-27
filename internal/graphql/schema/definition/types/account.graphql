@@ -15,9 +15,6 @@ type Account {
     """
     txList (cursor:Cursor, count:Int!): TransactionList!
 
-    "Details of a staker, if the account is a staker."
-    staker: Staker
-
     "Details about smart contract, if the account is a smart contract."
     contract: Contract
 }
