@@ -530,15 +530,6 @@ type Query {
 
     "The number of stakers in Opera blockchain."
     stakersNum: Long!
-
-    """
-    Staker information. The staker is loaded either by numeric ID,
-    or by address. null if none is provided.
-    """
-    staker(id: Long, address: Address): Staker
-
-    "List of staker information from SFC smart contract."
-    stakers: [Staker!]!
 }
 
 # Mutation endpoints for modifying the data
