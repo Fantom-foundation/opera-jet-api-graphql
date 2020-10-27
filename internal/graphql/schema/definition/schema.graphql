@@ -65,18 +65,6 @@ type Query {
 
     # List of staker information from SFC smart contract.
     stakers: [Staker!]!
-
-    # The list of delegations for the given staker ID.
-    # Cursor is used to obtain specific slice of the staker's delegations.
-    # The most recent delegations are provided if cursor is omitted.
-    delegationsOf(staker:Long!, cursor: Cursor, count: Int = 25): DelegationList!
-
-    # Get the details of a specific delegation by it's delegator address
-    # and staker the delegation belongs to.
-    delegation(address:Address!, staker: Long!): Delegation
-
-    # Get the list of all delegations by it's delegator address.
-    delegationsByAddress(address:Address!, cursor: Cursor, count: Int = 25): DelegationList!
 }
 
 # Mutation endpoints for modifying the data

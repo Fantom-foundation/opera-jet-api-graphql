@@ -429,13 +429,6 @@ type Staker {
     delegationClaimedRewards: BigInt
 
     """
-    List of delegations of this staker. Cursor is used to obtain specific slice
-    of the staker's delegations. The most recent delegations
-    are provided if cursor is omitted.
-    """
-    delegations(cursor: Cursor, count: Int = 25):DelegationList!
-
-    """
     Status is a binary encoded status of the staker.
     Ok = 0, bin 1 = Fork Detected, bin 256 = Validator Offline
     """
@@ -479,9 +472,6 @@ type Account {
 
     "Details of a staker, if the account is a staker."
     staker: Staker
-
-    "List of delegations of the account, if the account is a delegator."
-    delegations(cursor:Cursor, count:Int = 25): DelegationList!
 
     "Details about smart contract, if the account is a smart contract."
     contract: Contract

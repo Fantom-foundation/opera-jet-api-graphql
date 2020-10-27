@@ -83,19 +83,6 @@ type Staker {
     "Origination score."
     originationScore: BigInt
 
-    "Amount of rewards claimed in WEI."
-    claimedRewards: BigInt
-
-    "Amount of rewards claimed by delegators in WEI."
-    delegationClaimedRewards: BigInt
-
-    """
-    List of delegations of this staker. Cursor is used to obtain specific slice
-    of the staker's delegations. The most recent delegations
-    are provided if cursor is omitted.
-    """
-    delegations(cursor: Cursor, count: Int = 25):DelegationList!
-
     """
     Status is a binary encoded status of the staker.
     Ok = 0, bin 1 = Fork Detected, bin 256 = Validator Offline
